@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+
+# Envs
+.venv/
+env/
+venv/
+.env
+.env.*
+
+# Poetry
+poetry.lock
+*.egg-info/
+
+# IDEs / Editors
+.vscode/
+.idea/
+*.swp
+
+# Build
+dist/
+build/
+
+# Uvicorn cache
+*.log
