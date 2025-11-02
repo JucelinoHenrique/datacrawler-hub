@@ -17,6 +17,8 @@ dependencies = [
     "beautifulsoup4 (>=4.14.2,<5.0.0)"
 ]
 
+[tool.isort]
+profile = "black"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
