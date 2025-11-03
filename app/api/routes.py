@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from app.api.articles import router as articles_router
+from app.api.metrics import router as metrics_router
 from app.api.scrape import router as scrape_router
 
 router = APIRouter()
@@ -13,3 +14,4 @@ def health_check():
 
 router.include_router(articles_router)
 router.include_router(scrape_router)
+router.include_router(metrics_router)

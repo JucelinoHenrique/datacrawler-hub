@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import FastAPI
 
 from app.api.routes import router as api_router
@@ -19,6 +21,8 @@ scheduler = ScrapeScheduler(
 @app.on_event("startup")
 def on_startup():
     Base.metadata.create_all(bind=engine)
+    logging.getLogger(__name__).info("app_starting")
+    scheduler.start()
 
 
 @app.on_event("shutdown")
