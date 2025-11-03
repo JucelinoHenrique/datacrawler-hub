@@ -7,7 +7,7 @@ from app.core.config import settings
 from app.core.scheduler import ScrapeScheduler
 from app.db.base import Base
 from app.db.session import engine
-
+from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI(title=settings.APP_NAME, version=settings.VERSION)
 
 # instancia global
@@ -17,6 +17,18 @@ app.state.scheduler = ScrapeScheduler(
     sources=settings.SCRAPE_SOURCES.split(","),
 )
 
+origins = [
+    "http://localhost:3000",  # front em dev (Next)
+    "http://127.0.0.1:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],  
+    allow_headers=["*"], 
+)
 
 @app.on_event("startup")
 def on_startup():
