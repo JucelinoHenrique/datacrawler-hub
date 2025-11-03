@@ -3,10 +3,12 @@ from __future__ import annotations
 from typing import Dict, Type
 
 from app.scrapers.base import BaseScraper
+from app.scrapers.hackernews_scraper import HackerNewsScraper
 from app.scrapers.stub_scraper import StubScraper
 
 SCRAPERS: Dict[str, Type[BaseScraper]] = {
     "stub": StubScraper,
+    "hackernews": HackerNewsScraper,
 }
 
 

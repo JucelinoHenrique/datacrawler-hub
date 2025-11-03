@@ -12,7 +12,7 @@ app = FastAPI(title=settings.APP_NAME, version=settings.VERSION)
 
 # instancia global
 
-scheduler = ScrapeScheduler(
+app.state.scheduler = ScrapeScheduler(
     interval_seconds=settings.SCRAPE_INTERVAL_SECONDS,
     sources=settings.SCRAPE_SOURCES.split(","),
 )
@@ -22,12 +22,12 @@ scheduler = ScrapeScheduler(
 def on_startup():
     Base.metadata.create_all(bind=engine)
     logging.getLogger(__name__).info("app_starting")
-    scheduler.start()
+    app.state.scheduler.start()
 
 
 @app.on_event("shutdown")
 async def on_shutdown():
-    await scheduler.stop()
+    await app.state.scheduler.stop()
 
 
 app.include_router(api_router)

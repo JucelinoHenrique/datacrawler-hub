@@ -1,11 +1,10 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.db.models import Article
 from app.db.session import get_db
-from app.main import scheduler
 
 router = APIRouter(prefix="/metrics", tags=["metrics"])
 
@@ -13,6 +12,7 @@ router = APIRouter(prefix="/metrics", tags=["metrics"])
 @router.get("")
 def get_metrics(db: Session = Depends(get_db)):
     total_articles = db.query(func.count(Article.id)).scalar() or 0
+    scheduler = Request.app.state.scheduler
     s = scheduler.state
     return {
         "app": settings.APP_NAME,
