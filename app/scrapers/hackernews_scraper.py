@@ -10,6 +10,26 @@ from bs4 import BeautifulSoup
 from app.schemas.article import ArticleIn
 from app.scrapers.base import BaseScraper
 
+async def fetch_og_image(page_url: str) -> str | None:
+    """Tenta buscar a imagem principal (og:image) da página de destino."""
+    try:
+        async with httpx.AsyncClient(timeout=5.0, follow_redirects=True) as client:
+            resp = await client.get(page_url)
+        if resp.status_code != 200:
+            return None
+
+        soup = BeautifulSoup(resp.text, "html.parser")
+        og = soup.find("meta", property="og:image") or soup.find(
+            "meta", attrs={"name": "twitter:image"}
+        )
+        if og and og.get("content"):
+            return og["content"].strip() or None
+    except Exception:
+        
+        return None
+
+    return None
+
 
 class HackerNewsScraper(BaseScraper):
     source = "hackernews"
@@ -44,13 +64,14 @@ class HackerNewsScraper(BaseScraper):
                 continue
 
             url = urljoin(BASE, href)
-
+            image_url = await fetch_og_image(url)
             results.append(
                 ArticleIn(
                     title=title,
                     url=url,
                     source=self.source,
-                    published_at=now,  # HN não traz data na home; usamos now
+                    published_at=now, 
+                    image_url=image_url
                 )
             )
 
