@@ -14,6 +14,7 @@ class Article(Base):
     source = Column(String(100), nullable=False)
     published_at = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    image_url = Column(String, nullable=True)
 
     __table_args__ = (
         UniqueConstraint("url", name="uq_articles_url"),
