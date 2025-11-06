@@ -9,7 +9,7 @@ class ArticleIn(BaseModel):
     url: HttpUrl
     source: str = Field(min_length=1, max_length=100)
     published_at: Optional[datetime] = None
-    image_url: str | None = None
+    image_url: Optional[HttpUrl] = None
 
 
 class ArticleOut(ArticleIn):
