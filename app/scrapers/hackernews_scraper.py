@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from typing import List
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 import httpx
 from bs4 import BeautifulSoup
@@ -22,13 +22,23 @@ async def fetch_og_image(page_url: str) -> str | None:
         og = soup.find("meta", property="og:image") or soup.find(
             "meta", attrs={"name": "twitter:image"}
         )
-        if og and og.get("content"):
-            return og["content"].strip() or None
-    except Exception:
+        if not og or not og.get("content"):
+            return None
         
-        return None
+        raw_img = og["content"].strip()
+        if not raw_img:
+            return None
+        
+        if raw_img.startswith("/"):
+            return urljoin(page_url, raw_img)
+        
+        parsed = urlparse(raw_img)
+        if not parsed.scheme:
+          return f"https://{raw_img}"
 
-    return None
+        return raw_img
+    except Exception:
+        return None
 
 
 class HackerNewsScraper(BaseScraper):
